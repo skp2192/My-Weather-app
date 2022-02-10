@@ -14,6 +14,7 @@ import { ForecastData } from './forecastData';
 export class ForecastDetailsComponent implements OnInit, OnDestroy {
 
   zipCode!: string;
+  days!: string;
   forCastDataForZip: any;
   private subscription = new Subscription();
   filteredForeCastList = [];
@@ -24,6 +25,7 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
   ) {
     this.activatedroute.params.subscribe((data) => {
       this.zipCode = data['zipcode'];
+      this.days = data['days'];
     });
   }
 
@@ -47,7 +49,7 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
   // get 5days forecast details
   getFiveDaysForecast(zipCode: any) {
     if(zipCode.length == 6){
-      this.subscription.add(this.weatherService.getForeCastWeatherDetails(this.zipCode).subscribe(forecastDetails => {
+      this.subscription.add(this.weatherService.getForeCastWeatherDetails(this.zipCode,this.days).subscribe(forecastDetails => {
         this.forCastDataForZip = forecastDetails;
         this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
           forecastData.dt_txt = new Date(forecastData.dt * 1000);

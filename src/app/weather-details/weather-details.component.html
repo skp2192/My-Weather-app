@@ -63,8 +63,10 @@
                           </div>
                           
                           <div class="col-12">
-                            <a [routerLink]="['/forecastDetails/forecast', item?.zipcode]" routerLinkActive="router-link-active"><b>Show
-                                5-days forecast for {{ item.name }}</b></a>
+                            <a [routerLink]="['/forecastDetails/forecast', item?.zipcode,5]" routerLinkActive="router-link-active"><b>Show
+                                5-days forecast for {{ item.name }}</b></a><br>
+                                <a [routerLink]="['/forecastDetails/forecast', item?.zipcode,16]" routerLinkActive="router-link-active"><b>Show
+                                    16-days forecast for {{ item.name }}</b></a>
                           </div>
                         </div>
                       </div>

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ForecastDetailsComponent } from '../forecast-details/forecast-details.component';
 
 const routes: Routes = [
-  {path:'forecast/:zipcode',component:ForecastDetailsComponent},
+  {path:'forecast/:zipcode/:days',component:ForecastDetailsComponent},
 ];
 
 @NgModule({

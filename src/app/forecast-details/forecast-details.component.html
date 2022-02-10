@@ -5,7 +5,7 @@
         <div>
           <div class="card">
             <div class="card-header text-center">
-              <h4 class="text-center pull-left"><b>5-days forecast details</b></h4>
+              <h4 class="text-center pull-left"><b>{{days}}-days forecast details</b></h4>
             </div>
             <div class="card-body">
               <fieldset class="pb-3">
@@ -13,7 +13,8 @@
                 <div class="mt-4">
                 <ul class="list-group " *ngIf="forCastDataForZip && forCastDataForZip.list.length > 0">
                   <ng-container *ngFor="let item of forCastDataForZip.list; let i=index">
-                    <li class="list-group-item" *ngIf="i>0 && i<6">
+                    <li class="list-group-item" *ngIf="days=='5'?i>0 && i<6:true">
+                      <!-- <li class="list-group-item" *ngIf="i>0 && i<6"> -->
                       {{item.dt_txt | date: 'EEEE, MMM d'}}:
                       {{item.weather[0].main}}
                       - Min: {{(item.temp.min-273.15)| number : '1.0-0'}}℃
