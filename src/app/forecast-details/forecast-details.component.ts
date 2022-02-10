@@ -17,6 +17,7 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
   forCastDataForZip: any;
   private subscription = new Subscription();
   filteredForeCastList = [];
+  storeForecast:any;
   constructor(
     private activatedroute: ActivatedRoute,
     private weatherService: WeatherService
@@ -28,17 +29,44 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.getFiveDaysForecast();
+    let data:any = localStorage.getItem('forecastDetails')
+    data = JSON.parse(data)
+    if(!!localStorage.getItem('forecastDetails')){
+      if(this.zipCode == data.zipcode){
+        this.forCastDataForZip = data.forecastDetails
+      }else{
+        this.getFiveDaysForecast(this.zipCode);
+      }
+    }
+    else{
+      this.getFiveDaysForecast(this.zipCode);
+    }
+
   }
 
   // get 5days forecast details
-  getFiveDaysForecast() {
-    this.subscription.add(this.weatherService.getForeCastWeatherDetails(this.zipCode).subscribe(forecastDetails => {
-      this.forCastDataForZip = forecastDetails;
-      this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
-        forecastData.dt_txt = new Date(forecastData.dt * 1000);
-      });
-    }));
+  getFiveDaysForecast(zipCode: any) {
+    if(zipCode.length == 6){
+      this.subscription.add(this.weatherService.getForeCastWeatherDetails(this.zipCode).subscribe(forecastDetails => {
+        this.forCastDataForZip = forecastDetails;
+        this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
+          forecastData.dt_txt = new Date(forecastData.dt * 1000);
+        });
+        this.storeForecast = {
+          zipcode: zipCode,
+          forecastDetails: this.forCastDataForZip
+        }
+        localStorage.setItem('forecastDetails',JSON.stringify(this.storeForecast))
+      }));
+    }
+    else if(zipCode.length == 5){
+      this.subscription.add(this.weatherService.getUSForeCastWeatherDetails(this.zipCode).subscribe(forecastDetails => {
+        this.forCastDataForZip = forecastDetails;
+        this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
+          forecastData.dt_txt = new Date(forecastData.dt * 1000);
+        });
+      }));
+    }
   }
 
   //unsubscribe the Obsevable

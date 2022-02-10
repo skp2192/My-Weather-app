@@ -32,37 +32,88 @@ export class WeatherDetailsComponent implements OnInit, OnDestroy {
 
   // submit new zipcode
   getCurrentWeatherZipCode(zipCode: string) {
+    console.log('Zipcode',zipCode.length)
     if (zipCode && zipCode !== '') {
-      let ifExists = false;
-      this.weatherDetails.forEach((resp: WeatherData) => {
-        if (resp.zipcode === zipCode) ifExists = true;
-      });
-      if (!ifExists) {
-        this.subscription.add(this.weatherService.getWeatherzipcodeDetails(zipCode).subscribe(weatherData => {
-            if(weatherData) {
-              weatherData = { ...weatherData, zipcode: zipCode };
-              this.weatherDetails.push(weatherData);
-              localStorage.setItem(
-                'weatherLists',
-                JSON.stringify(this.weatherDetails)
+
+      if(zipCode.length == 6){
+        console.log('india',zipCode.length)
+        let ifExists = false;
+        this.weatherDetails.forEach((resp: WeatherData) => {
+          if (resp.zipcode === zipCode) ifExists = true;
+        });
+        if (!ifExists) {
+          this.subscription.add(this.weatherService.getWeatherzipcodeDetails(zipCode).subscribe(weatherData => {
+              if(weatherData) {
+                weatherData = { ...weatherData, zipcode: zipCode };
+                this.weatherDetails.push(weatherData);
+                localStorage.setItem(
+                  'weatherLists',
+                  JSON.stringify(this.weatherDetails)
+                );
+              }
+              this.zipCode = '';
+              this.toast.success("zipcode added successfully");
+            },
+            () => {
+              this.toast.warning(
+                'invalid zipcode: ' +
+                  zipCode +
+                  ', or data not availble for this zipcode.'
               );
+              this.zipCode = '';
             }
-            this.zipCode = '';
-            this.toast.success("zipcode added successfully");
-          },
-          () => {
-            this.toast.warning(
-              'invalid zipcode: ' +
-                zipCode +
-                ', or data not availble for this zipcode.'
-            );
-            this.zipCode = '';
-          }
-        ));
-      } else {
-        this.zipCode = '';
-        this.toast.warning("zipcode already exists.");
+          ));
+        }
+      
+        else {
+         this.zipCode = '';
+         this.toast.warning("zipcode already exists.");
+       }
+      }else if(zipCode.length==5){
+        console.log('us',zipCode.length)
+        let ifExists = false;
+        this.weatherDetails.forEach((resp: WeatherData) => {
+          if (resp.zipcode === zipCode) ifExists = true;
+        });
+        if (!ifExists) {
+          this.subscription.add(this.weatherService.getUSWeatherzipcodeDetails(zipCode).subscribe(weatherData => {
+              if(weatherData) {
+                weatherData = { ...weatherData, zipcode: zipCode };
+                this.weatherDetails.push(weatherData);
+                localStorage.setItem(
+                  'weatherLists',
+                  JSON.stringify(this.weatherDetails)
+                );
+              }
+              this.zipCode = '';
+              this.toast.success("zipcode added successfully");
+            },
+            () => {
+              this.toast.warning(
+                'invalid zipcode: ' +
+                  zipCode +
+                  ', or data not availble for this zipcode.'
+              );
+              this.zipCode = '';
+            }
+          ));
+        }
+      
+        else {
+         this.zipCode = '';
+         this.toast.warning("zipcode already exists.");
+       }
+
       }
+      
+      else {
+       this.zipCode = '';
+       this.toast.warning(
+         'invalid zipcode: ' +
+           zipCode +
+           ', or data not availble for this zipcode.'
+       );
+     }
     } else {
       this.toast.warning("Please enter zipcode.");
     }
@@ -74,6 +125,7 @@ export class WeatherDetailsComponent implements OnInit, OnDestroy {
       this.weatherDetails = this.weatherDetails.filter(
         (data: WeatherData) => data.zipcode !== zipcode
       );
+      console.log('see ddata',this.weatherDetails)
       this.toast.success("Removed Succesfully");
       localStorage.setItem(
         'weatherLists',
