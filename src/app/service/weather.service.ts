@@ -16,15 +16,16 @@ getWeatherzipcodeDetails(zipCode:string){
   return this.httpClient.get(this.api_url + 'weather?zip='+zipCode+',in&appid='+this.id);
 }
 getUSWeatherzipcodeDetails(zipCode:string){
-  return this.httpClient.get(this.us_api_url + 'weather?zip='+zipCode+',in&appid='+this.id);
+  return this.httpClient.get(this.api_url + 'weather?zip='+zipCode+',us&appid='+this.id);
 }
 
 getForeCastWeatherDetails(zipCode:string,days:string) {
-  return this.httpClient.get(this.api_url + 'forecast/daily?zip='+zipCode+',in&appid='+this.id+'&cnt='+days);
+  var countryCode = zipCode.length==5?"us":"in";
+  return this.httpClient.get(this.api_url + 'forecast/daily?zip='+zipCode+','+countryCode+'&appid='+this.id+'&cnt='+days);
 }
 
 getUSForeCastWeatherDetails(zipCode:string) {
-  return this.httpClient.get(this.us_api_url + 'forecast/daily?zip='+zipCode+',in&appid='+this.id);
+  return this.httpClient.get(this.us_api_url + 'forecast/daily?zipcode='+zipCode);
 }
 
 }

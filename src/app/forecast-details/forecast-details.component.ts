@@ -34,7 +34,7 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
     let data:any = localStorage.getItem('forecastDetails')
     data = JSON.parse(data)
     if(!!localStorage.getItem('forecastDetails')){
-      if(this.zipCode == data.zipcode){
+      if(this.zipCode == data.zipcode && this.days == data.days){
         this.forCastDataForZip = data.forecastDetails
       }else{
         this.getFiveDaysForecast(this.zipCode);
@@ -48,7 +48,7 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
 
   // get 5days forecast details
   getFiveDaysForecast(zipCode: any) {
-    if(zipCode.length == 6){
+    //if(zipCode.length == 6){
       this.subscription.add(this.weatherService.getForeCastWeatherDetails(this.zipCode,this.days).subscribe(forecastDetails => {
         this.forCastDataForZip = forecastDetails;
         this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
@@ -56,19 +56,20 @@ export class ForecastDetailsComponent implements OnInit, OnDestroy {
         });
         this.storeForecast = {
           zipcode: zipCode,
+          days: this.days,
           forecastDetails: this.forCastDataForZip
         }
         localStorage.setItem('forecastDetails',JSON.stringify(this.storeForecast))
       }));
-    }
-    else if(zipCode.length == 5){
-      this.subscription.add(this.weatherService.getUSForeCastWeatherDetails(this.zipCode).subscribe(forecastDetails => {
-        this.forCastDataForZip = forecastDetails;
-        this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
-          forecastData.dt_txt = new Date(forecastData.dt * 1000);
-        });
-      }));
-    }
+    // }
+    // else if(zipCode.length == 5){
+    //   this.subscription.add(this.weatherService.getUSForeCastWeatherDetails(this.zipCode).subscribe(forecastDetails => {
+    //     this.forCastDataForZip = forecastDetails;
+    //     this.forCastDataForZip.list.forEach((forecastData: ForecastData) => {
+    //       forecastData.dt_txt = new Date(forecastData.dt * 1000);
+    //     });
+    //   }));
+    // }
   }
 
   //unsubscribe the Obsevable
